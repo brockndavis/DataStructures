@@ -21,7 +21,7 @@ public class DiagraphTests {
         friendships = new DirectedGraph<>();
         friendships.addVertex("Steve");
         friendships.addVertex("Jessica");
-        friendships.addVertex("Justin");
+        friendships.addVertex("Isiah");
         friendships.addVertex("David");
         friendships.addVertex("Kevin");
         friendships.addVertex("Kim");
@@ -29,10 +29,10 @@ public class DiagraphTests {
         friendships.addEdge("Steve", "Jessica");
         friendships.addEdge("Jessica", "Steve");
         friendships.addEdge("Steve", "David");
-        friendships.addEdge("Justin", "Jessica");
-        friendships.addEdge("Justin", "David");
-        friendships.addEdge("Justin", "Kim");
-        friendships.addEdge("Justin", "Barrack");
+        friendships.addEdge("Isiah", "Jessica");
+        friendships.addEdge("Isiah", "David");
+        friendships.addEdge("Isiah", "Kim");
+        friendships.addEdge("Isiah", "Barrack");
         friendships.addEdge("David", "Kevin");
         friendships.addEdge("David", "Kim");
         friendships.addEdge("David", "Barrack");
@@ -60,8 +60,8 @@ public class DiagraphTests {
 
     @Test
     void bfsTest() {
-        Iterator<String> bfs = friendships.breadthFirstIterator("Justin");
-        assertEquals("Justin", bfs.next());
+        Iterator<String> bfs = friendships.breadthFirstIterator("Isiah");
+        assertEquals("Isiah", bfs.next());
         assertEquals("Jessica", bfs.next());
         assertEquals("David", bfs.next());
         assertEquals("Kim", bfs.next());
@@ -73,8 +73,8 @@ public class DiagraphTests {
 
     @Test
     void dfsTest() {
-        Iterator<String> dfs = friendships.depthFirstIterator("Justin");
-        assertEquals("Justin", dfs.next());
+        Iterator<String> dfs = friendships.depthFirstIterator("Isiah");
+        assertEquals("Isiah", dfs.next());
         assertEquals("Barrack", dfs.next());
         assertEquals("Kim", dfs.next());
         assertEquals("David", dfs.next());
@@ -98,7 +98,7 @@ public class DiagraphTests {
         assertTrue(friendships.containsVertex("Steve"));
         assertTrue(friendships.containsVertex("David"));
         assertTrue(friendships.containsVertex("Jessica"));
-        assertTrue(friendships.containsVertex("Justin"));
+        assertTrue(friendships.containsVertex("Isiah"));
         assertTrue(friendships.containsVertex("Kevin"));
         assertTrue(friendships.containsVertex("Kim"));
         assertTrue(friendships.containsVertex("Barrack"));
@@ -110,10 +110,10 @@ public class DiagraphTests {
         assertTrue(friendships.containsEdge("Steve", "Jessica"));
         assertTrue(friendships.containsEdge("Steve", "David"));
         assertTrue(friendships.containsEdge("Jessica", "Steve"));
-        assertTrue(friendships.containsEdge("Justin", "Jessica"));
-        assertTrue(friendships.containsEdge("Justin", "David"));
-        assertTrue(friendships.containsEdge("Justin", "Kim"));
-        assertTrue(friendships.containsEdge("Justin", "Barrack"));
+        assertTrue(friendships.containsEdge("Isiah", "Jessica"));
+        assertTrue(friendships.containsEdge("Isiah", "David"));
+        assertTrue(friendships.containsEdge("Isiah", "Kim"));
+        assertTrue(friendships.containsEdge("Isiah", "Barrack"));
         assertTrue(friendships.containsEdge("David", "Kevin"));
         assertTrue(friendships.containsEdge("Kevin", "Barrack"));
         assertTrue(friendships.containsEdge("Kim", "Barrack"));
@@ -126,7 +126,7 @@ public class DiagraphTests {
     void connectedTest() {
         assertFalse(friendships.isConnected());
         friendships.addEdge("Barrack", "Steve");
-        friendships.addEdge("David", "Justin");
+        friendships.addEdge("David", "Isiah");
         assertTrue(friendships.isConnected());
     }
 
@@ -139,8 +139,8 @@ public class DiagraphTests {
     void bipartiteTest() {
         assertFalse(friendships.isBipartite());
         assertTrue(friendships.removeEdge("Kim", "Barrack"));
-        assertTrue(friendships.removeEdge("Justin", "Kim"));
-        assertTrue(friendships.removeEdge("Justin", "Barrack"));
+        assertTrue(friendships.removeEdge("Isiah", "Kim"));
+        assertTrue(friendships.removeEdge("Isiah", "Barrack"));
         assertTrue(friendships.removeEdge("Kevin", "Barrack"));
         assertTrue(friendships.isBipartite());
     }
@@ -157,7 +157,7 @@ public class DiagraphTests {
     void inDegreeTests() {
         assertEquals(1, friendships.inDegree("Steve"));
         assertEquals(2, friendships.inDegree("Jessica"));
-        assertEquals(0, friendships.inDegree("Justin"));
+        assertEquals(0, friendships.inDegree("Isiah"));
         assertEquals(2, friendships.inDegree("David"));
         assertEquals(2, friendships.inDegree("Kim"));
         assertEquals(4, friendships.inDegree("Barrack"));
@@ -169,7 +169,7 @@ public class DiagraphTests {
         assertEquals(2, friendships.outDegree("Steve"));
         assertEquals(1, friendships.outDegree("Jessica"));
         assertEquals(3, friendships.outDegree("David"));
-        assertEquals(4, friendships.outDegree("Justin"));
+        assertEquals(4, friendships.outDegree("Isiah"));
         assertEquals(1, friendships.outDegree("Kevin"));
         assertEquals(1, friendships.outDegree("Kim"));
         assertEquals(0, friendships.outDegree("Barrack"));
@@ -177,26 +177,26 @@ public class DiagraphTests {
 
     @Test
     void pathExistenceTests() {
-        friendships.addEdge("David", "Justin");
+        friendships.addEdge("David", "Isiah");
         assertFalse(friendships.pathExists("Barrack", "Steve"));
         assertFalse(friendships.pathExists("Barrack", "David"));
-        assertTrue(friendships.pathExists("Jessica", "Justin"));
+        assertTrue(friendships.pathExists("Jessica", "Isiah"));
         friendships.addEdge("Barrack", "Steve");
         assertTrue(friendships.pathExists("Barrack", "Kevin"));
-        assertTrue(friendships.pathExists("Barrack", "Justin"));
+        assertTrue(friendships.pathExists("Barrack", "Isiah"));
         assertTrue(friendships.pathExists("Kim", "Kevin"));
     }
 
     @Test
     void pathWeightTest() {
         assertEquals(0, friendships.getMinimumDistance("Steve", "Kevin"));
-        assertNull(friendships.getMinimumDistance("Barrack", "Justin"));
+        assertNull(friendships.getMinimumDistance("Barrack", "Isiah"));
     }
 
     @Test
     void pathTest() {
         friendships.addEdge("Barrack", "Steve");
-        friendships.addEdge("David", "Justin");
+        friendships.addEdge("David", "Isiah");
         Path<String> path = friendships.shortestPath("Barrack", "Kevin");
         assertEquals(0, path.pathWeight());
         assertEquals(3, path.edgeCount());
@@ -213,7 +213,7 @@ public class DiagraphTests {
     @Test
     void mstTest() {
         assertNull(friendships.toMinimumSpanningTree("David"));
-        friendships.addEdge("David", "Justin");
+        friendships.addEdge("David", "Isiah");
         Graph<String> mst = friendships.toMinimumSpanningTree("David");
         assertEquals(7, mst.vertexCount());
         assertEquals(6, mst.edgeCount());
@@ -228,7 +228,7 @@ public class DiagraphTests {
         actual = new HashSet<>(friendships.getAdjacencies("Barrack"));
         assertEquals(adj, actual);
         adj = Set.of("Jessica", "David", "Kim", "Barrack");
-        actual = new HashSet<>(friendships.getAdjacencies("Justin"));
+        actual = new HashSet<>(friendships.getAdjacencies("Isiah"));
         assertEquals(adj, actual);
     }
 }

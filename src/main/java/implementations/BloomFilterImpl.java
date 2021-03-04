@@ -50,7 +50,7 @@ public class BloomFilterImpl<E> implements BloomFilter<E> {
         Objects.requireNonNull(element);
         int[] hashCodes = generateHashCodes(element);
         for (int i : hashCodes) {
-            if (!filter.get(Math.floorMod(hashCodes[i], filter.size())))
+            if (!filter.get(Math.floorMod(i, filter.size())))
                 return false;
         }
         return true;
