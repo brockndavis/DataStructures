@@ -200,7 +200,6 @@ public class UnweightedGraphTests {
         assertEquals(dfs.next(), "S/E");
         assertEquals(dfs.next(), "N/E");
         assertEquals(dfs.next(), "S/W");
-
     }
 
     @Test
