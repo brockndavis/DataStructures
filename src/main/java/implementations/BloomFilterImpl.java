@@ -100,7 +100,7 @@ public class BloomFilterImpl<E> implements BloomFilter<E> {
 
     @Override
     public int getMemoryFootprintEstimate() {
-        // returns the memory footprint in bytes
+        // returns the memory footprint of the filter in bytes
         return memoryFootprintEstimate / 8;
     }
 
