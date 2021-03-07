@@ -91,8 +91,8 @@ public class SkipListImpl<E> implements SkipList<E> {
         Objects.requireNonNull(e);
         List<NodeIndexPair<E>> referenceUpdates = new LinkedList<>();
         ListNode<E> current = head;
-        boolean nodeNotFound = true;
-        while (nodeNotFound) {
+        boolean insertionPointFound = false;
+        while (!insertionPointFound) {
             for (int i = current.getHeight() - 1; i >= 0; i--) {
                 int cmpValue = (current.getReference(i) == null) ? -1 : compare(e, current.getReference(i).getData());
                 if (cmpValue > 0) {
@@ -103,28 +103,24 @@ public class SkipListImpl<E> implements SkipList<E> {
                     return false;
                 }
                 else {
+                    referenceUpdates.add(new NodeIndexPair<>(current, i));
                     if (i == 0) {
-                        nodeNotFound = false;
+                        insertionPointFound = true;
                         break;
-                    }
-                    else {
-                        referenceUpdates.add(new NodeIndexPair<>(current, i));
                     }
                 }
             }
         }
         size++;
         int newNodeHeight = genNodeHeight();
-        ListNode<E> newNode = new ListNode<>(e, newNodeHeight, current.getReference(0));
-        current.setReference(0, newNode);
+        ListNode<E> newNode = new ListNode<>(e, newNodeHeight);
+        for (NodeIndexPair<E> pair : referenceUpdates) {
+            if (pair.index < newNodeHeight)
+                newNode.setReference(pair.index, pair.node.setReference(pair.index, newNode));
+        }
         boolean heightWasUpdated = setMaxHeight();
         if (heightWasUpdated) {
             updateNodeHeights();
-        }
-        for (NodeIndexPair<E> pair : referenceUpdates) {
-            int referenceIndex = pair.index;
-            if (referenceIndex < newNodeHeight)
-                newNode.setReference(referenceIndex, pair.node.setReference(referenceIndex, newNode));
         }
         return true;
     }
@@ -174,9 +170,9 @@ public class SkipListImpl<E> implements SkipList<E> {
     public boolean remove(E e) {
         Objects.requireNonNull(e);
         ListNode<E> current = head;
-        ListNode<E> deletedNode = null;
-        boolean nodeNotFound = true;
-        while (nodeNotFound) {
+        List<NodeIndexPair<E>> referenceUpdates = new ArrayList<>();
+        boolean nodeFound = false;
+        while (!nodeFound) {
             for (int i = current.getHeight() - 1; i >= 0; i--) {
                 int cmpValue = (current.getReference(i) == null) ? -1 : compare(e, current.getReference(i).getData());
                 if (cmpValue > 0) {
@@ -184,21 +180,25 @@ public class SkipListImpl<E> implements SkipList<E> {
                     break;
                 }
                 if (cmpValue == 0) {
-                    deletedNode = current.getReference(i);
-                    nodeNotFound = false;
-                    break;
+                    referenceUpdates.add(new NodeIndexPair<>(current, i));
+                    if (i == 0) {
+                        nodeFound = true;
+                        break;
+                    }
                 }
                 if (i == 0)
                     return false;
             }
         }
-        for (int i = 0; i < deletedNode.getHeight(); i++) {
-            current = head;
-            while (!deletedNode.getData().equals(current.getReference(i).getData()))
-                current = current.getReference(i);
-            current.setReference(i, deletedNode.getReference(i));
+        ListNode<E> deletedNode = referenceUpdates.get(referenceUpdates.size() - 1).node;
+        for (NodeIndexPair<E> pair : referenceUpdates) {
+            if (pair.index < deletedNode.getHeight())
+                pair.node.setReference(pair.index, deletedNode.getReference(pair.index));
         }
         size--;
+        boolean heightWasUpdated = setMaxHeight();
+        if (heightWasUpdated)
+            trimSkipList();
         return true;
     }
 
@@ -238,7 +238,16 @@ public class SkipListImpl<E> implements SkipList<E> {
     private boolean setMaxHeight() {
         int oldMaxHeight = currentMaxHeight;
         currentMaxHeight = Math.max(1, (int)Math.ceil( Math.log(size) / Math.log(2)));
-        return (oldMaxHeight < currentMaxHeight);
+        return (oldMaxHeight != currentMaxHeight);
+    }
+
+    private void trimSkipList() {
+        ListNode<E> current = head;
+        while (current != null) {
+            ListNode<E> next = current.getReference(currentMaxHeight - 1);
+            current.trim(currentMaxHeight);
+            current = next;
+        }
     }
 
     private static class ListNode<E> {
@@ -281,6 +290,11 @@ public class SkipListImpl<E> implements SkipList<E> {
         }
         public void clearAllReferences() {
             references.clear();
+        }
+
+        public void trim(int height) {
+            while (references.size() > height)
+                references.remove(references.size() - 1);
         }
     }
     private class SkipListIterator implements Iterator<E> {
