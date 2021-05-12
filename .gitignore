@@ -1,1 +1,10 @@
+# ignore the test class for the skip list
 /src/main/java/SkipListMain.java
+
+# ignore all .txt files
+
+*.txt
+
+# ignore all Dockerfiles
+
+Dockerfile

@@ -12,7 +12,7 @@ public class Main {
         BloomFilter<Integer> filter = new BloomFilterImpl<>(2_000_000, 10e-10);
         System.out.println("Expected false psitive rate: " + filter.expectedFalsePositiveRate());
         System.out.println("Memory footprint estimation (bytes): " + filter.getMemoryFootprintEstimate());
-        System.out.println("Hash function count: " + filter.getHashFunctionCount());
+        System.out.println("Hashy function count: " + filter.getHashFunctionCount());
         System.out.println("Size: " + filter.size());
         System.out.println("Inserting 1,000,000 elements... ");
         new Random().ints(1_000_000).forEach(filter::add);
