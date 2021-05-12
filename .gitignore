@@ -8,3 +8,7 @@
 # ignore all Dockerfiles
 
 Dockerfile
+
+# ingore the target directory, which contains compiled bytecode
+
+target/
