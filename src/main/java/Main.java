@@ -35,7 +35,7 @@ public class Main {
 
         System.out.println("BST height: " + bst.height());
         System.out.println("AVL height: " + avl.height());
-        System.out.println("BST size: " + bst.size());
+        System.out.println("BST size:  " + bst.size());
         System.out.println("AVL size: " + avl.size());
         System.out.println("Custom AVL height: " + myAvl.height());
         System.out.println("Custom AVL size: " + myAvl.size());
